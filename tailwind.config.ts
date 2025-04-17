@@ -20,8 +20,8 @@ const config = {
     extend: {
       colors: {
         dark: {
-          1: '#000000', // iOS dark mode background
-          2: '#121212', // Secondary dark
+          1: '#1e1e2f', // iOS dark mode background
+          2: 'linear-gradient(135deg, #1f005c, #5b247a)', // Secondary dark
           3: '#1C1C1E', // iOS dark mode card
           4: '#2C2C2E', // iOS dark mode secondary
         },

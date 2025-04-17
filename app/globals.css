@@ -628,3 +628,32 @@
   background: rgba(45, 130, 254, 0.4) !important;
   border-radius: 4px !important;
 }
+.cl-internal-11mzgzk {
+  display: flex;
+  gap: 66px;
+}
+
+.cl-logoBox{
+  height: 50px;
+  width: 50px;
+}
+.cl-internal-15b1k3o {
+  gap: 2px;
+}
+.cl-internal-106hgwy {
+  text-align: center;
+  justify-content: center;
+  display: inline;
+}
+@keyframes backgroundMove {
+  0% {
+    background-position: 0% 0%;
+  }
+  50% {
+    background-position: 100% 100%;
+  }
+  100% {
+    background-position: 0% 0%;
+  }
+}
+

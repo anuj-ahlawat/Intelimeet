@@ -1,4 +1,5 @@
 'use client';
+
 import { useState } from 'react';
 import {
   CallControls,
@@ -10,7 +11,8 @@ import {
   useCallStateHooks,
 } from '@stream-io/video-react-sdk';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { Users, LayoutList } from 'lucide-react';
+import { Users, LayoutList, ClipboardCopyIcon, UserPlus } from 'lucide-react';
+import { toast } from 'sonner';
 
 import {
   DropdownMenu,
@@ -19,6 +21,14 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from './ui/dropdown-menu';
+import {
+  Dialog,
+  DialogTrigger,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from './ui/dialog';
+
 import Loader from './Loader';
 import EndCallButton from './EndCallButton';
 import { cn } from '@/lib/utils';
@@ -33,8 +43,8 @@ const MeetingRoom = () => {
   const [showParticipants, setShowParticipants] = useState(false);
   const { useCallCallingState } = useCallStateHooks();
 
-  // for more detail about types of CallingState see: https://getstream.io/video/docs/react/ui-cookbook/ringing-call/#incoming-call-panel
   const callingState = useCallCallingState();
+  const meetingLink = typeof window !== 'undefined' ? window.location.href : '';
 
   if (callingState !== CallingState.JOINED) return <Loader />;
 
@@ -52,7 +62,7 @@ const MeetingRoom = () => {
   return (
     <section className="relative h-screen w-full overflow-hidden pt-4 text-white">
       <div className="relative flex size-full items-center justify-center">
-        <div className=" flex size-full max-w-[1000px] items-center">
+        <div className="flex size-full max-w-[1000px] items-center">
           <CallLayout />
         </div>
         <div
@@ -63,13 +73,15 @@ const MeetingRoom = () => {
           <CallParticipantsList onClose={() => setShowParticipants(false)} />
         </div>
       </div>
-      {/* video layout and call controls */}
-      <div className="fixed bottom-0 flex w-full items-center justify-center gap-5">
+
+      
+      <div className="fixed bottom-0 flex w-full items-center justify-center gap-3 px-4 pb-3">
         <CallControls onLeave={() => router.push(`/`)} />
 
+        
         <DropdownMenu>
           <div className="flex items-center">
-            <DropdownMenuTrigger className="cursor-pointer rounded-2xl bg-[#19232d] px-4 py-2 hover:bg-[#4c535b]  ">
+            <DropdownMenuTrigger className="cursor-pointer rounded-2xl bg-[#19232d] px-4 py-2 hover:bg-[#4c535b]">
               <LayoutList size={20} className="text-white" />
             </DropdownMenuTrigger>
           </div>
@@ -88,12 +100,55 @@ const MeetingRoom = () => {
             ))}
           </DropdownMenuContent>
         </DropdownMenu>
-        <CallStatsButton />
+
+        
+
+        
+        <Dialog>
+          <DialogTrigger asChild>
+            <button>
+              <div className="cursor-pointer rounded-2xl bg-[#19232d] px-4 py-2 hover:bg-[#4c535b] flex items-center gap-1">
+                <UserPlus size={20} />
+                <span className="hidden md:inline text-sm">Invite</span>
+              </div>
+            </button>
+          </DialogTrigger>
+          <DialogContent className="bg-[#1a1a1a] text-white border border-white/10 max-w-sm rounded-2xl p-6">
+  <DialogHeader>
+    <DialogTitle className="text-xl font-semibold mb-4">Invite Participants</DialogTitle>
+  </DialogHeader>
+
+  <div className="space-y-4">
+   
+    <div className="grid gap-2 rounded-md bg-[#111] px-4 py-2 text-sm">
+  <span className="truncate max-w-[80%]">{meetingLink}</span>
+  <button
+    onClick={() => {
+      navigator.clipboard.writeText(meetingLink);
+      toast.success('Link copied!');
+    }}
+    className="text-blue-400 hover:underline text-xs whitespace-nowrap"
+  >
+    Copy
+  </button>
+</div>
+
+  
+
+
+    
+  </div>
+</DialogContent>
+        </Dialog>
+
+        
         <button onClick={() => setShowParticipants((prev) => !prev)}>
-          <div className=" cursor-pointer rounded-2xl bg-[#19232d] px-4 py-2 hover:bg-[#4c535b]  ">
+          <div className="cursor-pointer rounded-2xl bg-[#19232d] px-4 py-2 hover:bg-[#4c535b]">
             <Users size={20} className="text-white" />
           </div>
         </button>
+
+        
         {!isPersonalRoom && <EndCallButton />}
       </div>
     </section>
@@ -101,3 +156,5 @@ const MeetingRoom = () => {
 };
 
 export default MeetingRoom;
+
+
